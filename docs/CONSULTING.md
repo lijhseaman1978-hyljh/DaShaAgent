@@ -13,7 +13,7 @@ DaShaAgent（大傻秘书）以 MIT 协议开源，可自由用于商业场景�
 ## 合作方式 / How to reach us
 
 - 通过仓库 **GitHub Issues** 描述需求，或直接邮件联系维护者。
-- 联系邮箱占位：`your-business-email@example.com`（请替换为真实邮箱）
+- 联系邮箱：`lijhseaman1978@gmail.com`
 - 我们会在 2 个工作日内回复，并给出方案与报价。
 
 ## 为什么选择我们 / Why us

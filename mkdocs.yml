@@ -1,6 +1,6 @@
 site_name: DaShaAgent 文档
 site_description: 大傻秘书 / DaShaAgent 开源智能体 OS 文档
-repo_url: https://github.com/YOUR_GITHUB_USERNAME/DaShaAgent
+repo_url: https://github.com/lijhseaman1978-hyljh/DaShaAgent
 theme:
   name: material
   language: zh
