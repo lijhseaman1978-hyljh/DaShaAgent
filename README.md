@@ -1,5 +1,7 @@
 # DaSha Agent
 
+[![📚 Docs](https://img.shields.io/badge/%F0%9F%93%9A%20Docs-lijhseaman1978--hyljh.github.io-blue)](https://lijhseaman1978-hyljh.github.io/DaShaAgent/) [![⭐ Sponsor](https://img.shields.io/badge/%E2%AD%90%20Sponsor-GitHub-red)](https://github.com/sponsors/lijhseaman1978-hyljh) [![📦 Releases](https://img.shields.io/badge/%F0%9F%93%A6%20Releases-v3.0.0--rc1-blue)](https://github.com/lijhseaman1978-hyljh/DaShaAgent/releases)
+
 > A **fully self-hosted agent operating system** — LLM, tools, memory, sessions, skills, and multi-agent orchestration are all decoupled into pluggable modules. Built with Node.js + TypeScript, **local-first by default (Ollama): zero extra cost, and your data never leaves your machine**. The built-in, network-installable **skill Marketplace** is what sets it apart from most open-source agent frameworks.
 
 English: DaSha Agent is a self-hosted, modular agent OS. Local-first by default (Ollama), pluggable tools/memory/skills, with a built-in skill marketplace.
