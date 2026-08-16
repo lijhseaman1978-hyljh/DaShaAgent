@@ -1,0 +1,12 @@
+import { registry } from '../../server/src/tools/registry';
+import { registerScriptTool, registerSkillExecTools } from '../../server/src/tools/scriptTool';
+registerScriptTool();
+registerSkillExecTools();
+const d = registry.getDef('skill_automated_web_report');
+console.log('summary:', registry.summaryOf('skill_automated_web_report'));
+console.log('desc 长度:', d?.description.length);
+console.log('全部 deferred 工具的 description 长度分布:');
+const lens = registry.deferredDefs().map(x => [x.name, x.description.length] as [string, number]).sort((a, b) => b[1] - a[1]);
+for (const [n, l] of lens.slice(0, 6)) console.log('  ', String(l).padStart(5), n);
+console.log('   ...');
+for (const [n, l] of lens.slice(-3)) console.log('  ', String(l).padStart(5), n);

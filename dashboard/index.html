@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DaShaAgent · Control Center</title>
+    <script>
+      // 首屏前定主题，避免深色模式白闪
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('ah-theme') || 'system';
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

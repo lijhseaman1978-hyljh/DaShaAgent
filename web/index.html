@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>示例用户船长专属工作台</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23689f38'/><g fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='16' cy='9' r='2.3'/><path d='M16 12v8'/><path d='M8 26a8 8 0 0 0 16 0'/><path d='M16 20l-6 4'/><path d='M16 20l6 4'/></g></svg>" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-dark" disabled />
+  <link rel="stylesheet" href="styles.v3.css?v=20260815_reveal" />
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="主导航">
+      <div class="sidebar-head">
+        <div class="brand">
+          <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><path d="M12 7v6"/><path d="M5 21a7 7 0 0 0 14 0"/><path d="M12 13l-5 3M12 13l5 3"/><circle cx="4" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="20" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+          <span class="brand-name">示例用户船长专属工作台</span>
+        </div>
+        <button class="icon-btn" id="collapseBtn" title="收起侧栏" aria-label="收起侧栏">‹</button>
+      </div>
+      <button class="side-newchat" id="sideNewChatBtn" title="开始新对话">＋ 新建对话</button>
+      <div class="session-search" id="sessionSearchWrap" hidden>
+        <input type="text" class="session-search-input" id="sessionSearch" placeholder="搜索会话…" aria-label="搜索会话" />
+      </div>
+      <nav class="nav" id="nav" aria-label="功能导航"></nav>
+      <div class="sidebar-foot">
+        <button class="icon-btn" id="dashBtn" title="Dashboard" aria-label="仪表盘">📊</button>
+        <button class="icon-btn" id="themeBtn" title="切换主题" aria-label="切换暗色模式">🌗</button>
+      </div>
+    </aside>
+
+    <main class="main" role="main">
+      <header class="topbar">
+        <button class="icon-btn show-side" id="showSideBtn" title="展开侧栏" aria-label="展开侧栏">›</button>
+        <span class="session-title" id="sessionTitle" title="当前会话">新对话</span>
+        <div class="model-select" id="modelSelect">
+          <button class="model-trigger" id="modelTrigger" aria-label="选择模型" aria-haspopup="listbox">
+            <span class="model-dot" id="modelDot"></span>
+            <span class="model-name" id="modelName">选择模型…</span>
+            <span class="model-arrow">▾</span>
+          </button>
+          <div class="model-dropdown" id="modelDropdown" hidden role="listbox" aria-label="模型列表">
+            <input class="model-search" id="modelSearch" placeholder="搜索模型…" aria-label="搜索模型" />
+            <div class="model-groups" id="modelGroups"></div>
+            <div class="model-foot">
+              <button class="link-btn" id="modelSettingsLink">+ 添加自定义模型</button>
+            </div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <span class="msg-count" id="msgCount" title="消息条数">0 条</span>
+          <button class="icon-btn" id="refreshTopBtn" title="刷新模型与Token统计" aria-label="刷新">&#10227;</button>
+          <span class="conn" id="conn" role="status" aria-live="polite">连接中…</span>
+        </div>
+      </header>
+
+      <!-- 对话视图 -->
+      <section class="view view-chat" id="viewChat">
+        <div class="chat-toolbar">
+          <button class="ghost-btn" id="teamBtn">多智能体协作</button>
+          <button class="ghost-btn" id="jobBtn">跑每日简报</button>
+          <button class="ghost-btn" id="compressBtn" aria-label="压缩上下文">压缩上下文</button>
+          <button class="ghost-btn" id="exportBtn" aria-label="导出对话">导出</button>
+          <button class="ghost-btn" id="chatSettingsBtn" aria-label="对话设置" title="对话设置">⚙</button>
+          <button class="ghost-btn" id="newChatBtn">＋ 新建对话</button>
+        </div>
+        <section class="chat" id="chat" role="log" aria-live="polite" aria-label="对话区域" aria-atomic="false">
+          <div class="empty" id="emptyState">
+            <div class="empty-logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="3.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="20.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="3.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2"/></svg></div>
+            <h2>示例用户船长专属工作台</h2>
+            <p>调用工具、检索记忆、多智能体协作 —— 你的个人 AI 工作台。</p>
+            <div class="empty-hint">直接在下方输入，或点左侧对话/新建对话开始。可拖拽任意文件到此处上传（≤500MB）。</div>
+            <div class="prompt-chips">
+              <button class="prompt-chip" data-prompt="帮我总结今天的重点工作">📋 总结今日工作</button>
+              <button class="prompt-chip" data-prompt="查询 EXAMPLE_VESSEL 船舶的最新状态">🚢 查询船舶状态</button>
+              <button class="prompt-chip" data-prompt="帮我写一篇公众号文章">✍️ 写公众号文章</button>
+              <button class="prompt-chip" data-prompt="检索我的记忆库，看看有什么需要注意的">🧠 检索记忆库</button>
+            </div>
+          </div>
+          <div class="drop-overlay" id="dropOverlay" hidden>
+            <div class="drop-inner">📥 松开以添加文件（≤500MB）</div>
+          </div>
+          <button class="scroll-to-bottom-btn" id="scrollToBottomBtn" title="回到底部" aria-label="滚动到底部" hidden>↓</button>
+        </section>
+        <!-- 输入区 -->
+        <div class="composer">
+          <div class="attach-area" id="attachArea"></div>
+          <div class="composer-inner">
+            <button class="attach-btn" id="attachBtn" title="上传文件" aria-label="上传文件">📎</button>
+            <textarea id="input" rows="1" placeholder="输入消息… (Enter 发送, Shift+Enter 换行)" aria-label="输入消息"></textarea>
+            <button class="voice-btn" id="voiceBtn" title="语音输入" aria-label="语音输入" hidden>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <button class="send-btn" id="sendBtn" aria-label="发送消息">
+              <span class="send-icon" id="sendIcon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
+              </span>
+            </button>
+          </div>
+          <div class="composer-foot">
+            <span id="hintText">模型：<b id="footModel">—</b>　·　支持拖拽/选择任意文件（≤500MB）</span>
+            <span class="ctx-tokens" id="ctxTokens" title="当前对话消耗的 token 估算">上下文 — tokens</span>
+            <span class="token-counter" id="tokenCounter">0 tokens</span>
+          </div>
+          <input type="file" id="fileInput" multiple hidden />
+        </div>
+      </section>
+
+      <!-- 统一面板视图（历史/记忆/任务/模型/技能/插件/配置/日志/指标） -->
+      <section class="view view-panel" id="viewPanel" hidden>
+        <div class="panel-head">
+          <h2 id="panelTitle"></h2>
+          <div class="panel-actions" id="panelActions"></div>
+        </div>
+        <div class="panel-body" id="panelBody"></div>
+      </section>
+    </main>
+
+    <div class="toast-container" id="toastContainer" aria-live="assertive" aria-relevant="additions"></div>
+  </div>
+
+  <!-- 对话设置弹层（字号/语音/头像/清空对话，localStorage 持久化） -->
+  <div class="modal-mask" id="chatSettingsModal" hidden>
+    <div class="modal-panel chat-ui-settings" role="dialog" aria-modal="true" aria-label="对话设置">
+      <div class="modal-head">
+        <h3>对话设置</h3>
+        <button class="ghost-btn modal-close" id="chatSettingsClose" aria-label="关闭">✕</button>
+      </div>
+      <div class="set-row"><label>字号</label>
+        <div class="seg" id="fontSizeSeg">
+          <button data-v="13">13px</button><button data-v="14">14px</button><button data-v="16">16px</button>
+        </div>
+      </div>
+      <div class="set-row"><label>我的称呼</label><input class="label-inp" id="setLabelUser" maxlength="12" placeholder="你" /></div>
+      <div class="set-row"><label>助手称呼</label><input class="label-inp" id="setLabelAgent" maxlength="12" placeholder="助手" /></div>
+      <div class="set-row"><label>语音</label>
+        <div class="set-switches">
+          <label class="switch"><input type="checkbox" id="setVoiceInput" /><span>语音输入</span></label>
+          <label class="switch"><input type="checkbox" id="setVoiceTTS" /><span>语音播报</span></label>
+        </div>
+      </div>
+      <div class="set-row"><label>我的头像</label>
+        <div class="avatar-pick" id="avatarUserPick"></div>
+      </div>
+      <div class="set-row"><label>助手头像</label>
+        <div class="avatar-pick" id="avatarAgentPick"></div>
+      </div>
+      <div class="set-row"><label>对话</label>
+        <button class="ghost-btn danger-sm" id="clearChatBtn">清空当前对话</button>
+      </div>
+      <div class="modal-foot"><span class="hint">设置自动保存在本机浏览器</span><button class="ghost-btn" id="chatSettingsDone">完成</button></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+  <script src="app.v3.js?v=20260815_reveal"></script>
+  <script>
+    // Dashboard — 点击📊打开 V3 Dashboard
+    (function() {
+      var btn = document.getElementById('dashBtn');
+      var chatView = document.getElementById('viewChat');
+      var panelView = document.getElementById('viewPanel');
+      var panelTitle = document.getElementById('panelTitle');
+      var panelBody = document.getElementById('panelBody');
+
+      btn.addEventListener('click', function() {
+        if (panelView.hidden) {
+          chatView.hidden = true;
+          panelView.hidden = false;
+          panelTitle.textContent = 'Dashboard';
+          panelBody.innerHTML = '<iframe src="/dashboard/" style="width:100%;height:100%;border:none;min-height:80vh" title="Dashboard"></iframe>';
+        } else {
+          panelView.hidden = true;
+          chatView.hidden = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

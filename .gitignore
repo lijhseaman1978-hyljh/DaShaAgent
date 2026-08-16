@@ -1,0 +1,94 @@
+node_modules/
+data/output/*
+data/workspace/*
+!data/output/.gitkeep
+!data/workspace/.gitkeep
+*.log
+.DS_Store
+.env
+.agent-tmp/
+data/config.json
+
+# ===== Runtime data (excluded to keep diffs clean; regenerated at runtime) =====
+data/logs.jsonl
+data/memory/
+data/vector/
+data/cognitive.json
+data/jobs.json
+data/observability.json
+data/reflections/
+data/success-patterns.json
+data/tool-effectiveness.json
+data/user-model.json
+data/evolution/
+server/data/
+agent.db
+
+# ===== Scratch / backup artifacts (not source — keep out of VCS) =====
+.backup/
+BACKUP*/
+*.bak*
+__pycache__/
+*.pyc
+malacca_shipping_lane.png/
+red_sea_escort.png/
+
+# ===== Runtime-generated agent state (regenerated at runtime) =====
+data/HEARTBEAT.md
+data/LESSONS.md
+data/PROFILE.md
+data/SOUL.md
+data/consciousness_state.json
+data/heartbeat.jsonl
+data/intentions.jsonl
+data/test_*.mjs
+notes/
+
+# ===== One-off scratch scripts / dumps (not source) =====
+_extract_v6.py
+_full_audit.mjs
+_llm_test.js
+extract_*.py
+process_prompt.py
+read_docx.py
+direct_verifier_test.cjs
+new_msgs_dump.txt
+weibo_hot*.json
+*.vbs
+server/src/_diag_run.ts
+server/_llm_test.ts
+
+# ===== Auto-checkpoint safety: runtime-generated artifacts (never source) =====
+# 这些文件由运行期/人工操作产生，不是源码；自动 checkpoint 必须排除它们，避免被误提交。
+data/uploads/
+*.png
+plan_docs/
+/workspace/
+web/_diag.html
+
+# ===== 2026-08-13 audit hardening: root scratch & downloaded artifacts =====
+# 根目录一次性调试脚本/输出（评估报告 R4 修复）
+/_*.py
+/_*.mjs
+/_*.cjs
+/_*.js
+/_*.bat
+/lessons_content.txt
+/session_analysis.txt
+/1/
+*.mp3
+*.wav
+/scroll_test.png
+/send_btn_*.png
+/edit_model_dialog.png
+/streaming_test.png
+/weibo_hot_tmp.json
+/root_scheduler_deprecated/
+.archive/
+
+# ===== 2026-08-13 checkpoint 闭环补漏（防自动提交误捡）=====
+.tmp/
+backups/
+data/knowledge/
+/感知循环*
+/data/感知循环*
