@@ -1,0 +1,5 @@
+# GitHub Sponsors 配置 —— 启用仓库右上角 Sponsor 按钮
+# 将 YOUR_GITHUB_USERNAME 替换为你的 GitHub 用户名后即生效
+github: ["YOUR_GITHUB_USERNAME"]
+# 自定义赞助入口（可选）：个人站点 / 支付宝 / Patreon 等
+custom: ["https://github.com/sponsors/YOUR_GITHUB_USERNAME"]

@@ -163,7 +163,7 @@ If DaSha Agent helps you, you're welcome to:
 - ⭐ Star it on GitHub so more people can find it
 - 🐛 File Issues / open PRs to build it together
 - ☕ Support ongoing maintenance via **GitHub Sponsors** (see the Sponsor button on the repo)
-- 🏢 Enterprise needs (private deployment, custom skills, SLA support): contact the maintainers via GitHub Issues.
+- 🏢 Enterprise needs (private deployment, custom skills, SLA support): contact the maintainers via GitHub Issues. See [Business & Custom Deployments →](docs/CONSULTING.md).
 
 ---
 
@@ -338,7 +338,7 @@ npm run dev           # 热重载启动（开发用）
 - ⭐ 在 GitHub 上 Star，让更多人发现
 - 🐛 提 Issue / PR 参与共建
 - ☕ 通过 **GitHub Sponsors** 支持持续维护（入口见仓库 Sponsor 按钮）
-- 🏢 企业版需求（私有部署、定制技能、SLA 支持）：请通过 GitHub Issues 联系维护者。
+- 🏢 企业版需求（私有部署、定制技能、SLA 支持）：请通过 GitHub Issues 联系维护者。详情见 [商业合作 / 私有部署 / 定制技能](docs/CONSULTING.md)。
 
 ---
 

@@ -1,0 +1,17 @@
+site_name: DaShaAgent 文档
+site_description: 大傻秘书 / DaShaAgent 开源智能体 OS 文档
+repo_url: https://github.com/YOUR_GITHUB_USERNAME/DaShaAgent
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.sections
+    - content.code.copy
+nav:
+  - 首页: index.md
+  - 技能编写指南: authoring-skills.md
+  - 安全审计报告: AUDIT_REPORT_2026-08-16.md
+  - 商业合作: CONSULTING.md
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
