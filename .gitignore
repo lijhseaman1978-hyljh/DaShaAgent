@@ -92,3 +92,12 @@ backups/
 data/knowledge/
 /感知循环*
 /data/感知循环*
+
+# ===== 2026-08-16 审计补漏：运行时派生状态（防 `git add .` 把会话/插件扫进仓库）=====
+data/crash/
+data/evolution/
+data/marketplace/
+data/plugins/
+data/feedback_log.jsonl
+data/intentions.jsonl
+data/user-model.json

@@ -1,0 +1,59 @@
+name: Bug report · 缺陷报告
+description: 报告一个可复现的 Bug
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量提供**最小可复现**信息，帮助维护者快速定位。
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么？
+      description: 清晰描述 Bug 现象与预期行为。
+      placeholder: 当我……时，期望……，实际……
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 逐步列出复现方式。
+      placeholder: |
+        1. 启动服务 `npm start`
+        2. 打开 http://localhost:3001
+        3. 点击……
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: LLM Provider 模式
+      options:
+        - ollama（本地）
+        - cloud（OpenAI 兼容）
+        - mock（流程验证）
+        - 其他 / 不确定
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本 / Commit
+      description: 运行 `git rev-parse HEAD` 或 `npm pkg get version`。
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志 / 报错
+      description: 粘贴相关终端输出或浏览器控制台报错（请脱敏，勿含密钥）。
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 确认项
+      options:
+        - label: 我已确认日志中不含任何密钥 / 个人隐私
+          required: true
+        - label: 我已搜索过现有 Issues，确认非重复提交
+          required: true

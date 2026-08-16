@@ -99,24 +99,6 @@ const DEFAULT_JOBS: JobDef[] = [
       return '【反馈管道分析结果】\n' + fb + '\n\n请结合以上反馈信号进行本次自学复盘。';
     },
   },
-  {
-    name: 'daily_brief',
-    cron: 'daily 07:00',
-    prompt: '请生成今日《海事简报》，重点关注：IMO 新规动态、全球 PSC 检查趋势、航海气象预警、值得关注的海事新闻。结论先行，分点列出，标注对航行安全的潜在影响。',
-    enabled: true,
-  },
-  {
-    name: 'weekly_psc',
-    cron: 'weekly MON 09:00',
-    prompt: '请生成本周《PSC 检查动态分析》，按地区分类，涵盖：高频缺陷 Top5、当前 CIC 集中检查、典型滞留案例、备忘录公告。用表格呈现，给出船上自查建议。',
-    enabled: true,
-  },
-  {
-    name: 'monthly_reg',
-    cron: 'monthly 1 10:00',
-    prompt: '请生成本月《法规更新综述》，梳理过去一个月生效或即将生效的 IMO/MARPOL/PSC 相关规则变化，标注生效日期、适用船型与合规要点。',
-    enabled: true,
-  },
 ];
 
 // ── 调度语义调整（2026-08-08）──────────────────────────────────────────

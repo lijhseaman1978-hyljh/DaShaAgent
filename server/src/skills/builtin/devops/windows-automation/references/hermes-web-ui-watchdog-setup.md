@@ -62,7 +62,7 @@ powershell.exe -ExecutionPolicy Bypass -Command ...
 
 ## Access
 
-- URL: http://localhost:8648/#/?token=6330f2f5484c8cc6b1efa242af5853267bc4ba7916257ecd80826880ee8394a6
+- URL: http://localhost:8648/#/?token=<YOUR_DASHA_WEB_UI_TOKEN>
 - Status: `dasha-web-ui status` (from git-bash) or check PID file at `C:\Users\your-user\.dasha-web-ui\server.pid`
 - Watchdog log: `C:\Users\your-user\.dasha-web-ui\watchdog.log`
 

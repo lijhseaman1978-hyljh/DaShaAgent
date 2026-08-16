@@ -79,7 +79,7 @@
   .spacer { flex: 1; }
   .icon-btn {
     width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
-    background: var(--surface); color: var(--text); cursor: pointer; font-size: 17px;
+    background: var(--surface); color: var(--text); cursor: pointer; font-size: 15px; font-weight: 700;
     display: grid; place-items: center; transition: transform .25s cubic-bezier(.16,1,.3,1), background .2s;
     backdrop-filter: blur(14px);
   }
@@ -303,18 +303,19 @@
     <div class="brand">
       <div class="logo">💎</div>
       <div>
-        <h1>技能市场</h1>
-        <p>Skill Marketplace · 社区分享 · 自托管注册中心</p>
+        <h1 data-i18n="mp_title">技能市场</h1>
+        <p data-i18n="mp_subtitle">Skill Marketplace · 社区分享 · 自托管注册中心</p>
       </div>
     </div>
     <div class="spacer"></div>
-    <button class="icon-btn" id="themeBtn" title="切换主题">🌗</button>
-    <button class="btn-primary" id="publishBtn">+ 发布技能</button>
+    <button class="icon-btn" id="langBtn" data-i18n-title="mp_lang_title" title="语言 / Language">中</button>
+    <button class="icon-btn" id="themeBtn" data-i18n-title="mp_theme_title" title="切换主题">🌗</button>
+    <button class="btn-primary" id="publishBtn" data-i18n="mp_publish">+ 发布技能</button>
   </header>
 
   <div class="tabs" id="srcTabs">
-    <button class="tab active" data-src="local">本地市场</button>
-    <button class="tab" data-src="remote">GitHub 远程</button>
+    <button class="tab active" data-src="local" data-i18n="mp_local">本地市场</button>
+    <button class="tab" data-src="remote" data-i18n="mp_remote">GitHub 远程</button>
   </div>
 
   <!-- 本地市场视图 -->
@@ -322,45 +323,45 @@
     <div class="toolbar">
       <div class="search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="searchInput" placeholder="搜索技能、标签、分类…" autocomplete="off" readonly />
+        <input id="searchInput" data-i18n-ph="mp_search_ph" placeholder="搜索技能、标签、分类…" autocomplete="off" readonly />
       </div>
       <select class="sort" id="sortSel">
-        <option value="popular">最热门</option>
-        <option value="rating">评分最高</option>
-        <option value="newest">最新发布</option>
-        <option value="name">名称 A-Z</option>
+        <option value="popular" data-i18n="sort_popular">最热门</option>
+        <option value="rating" data-i18n="sort_rating">评分最高</option>
+        <option value="newest" data-i18n="sort_newest">最新发布</option>
+        <option value="name" data-i18n="sort_name">名称 A-Z</option>
       </select>
-      <label class="chip-toggle" id="installedToggle"><input type="checkbox" style="display:none" /> 仅看已安装</label>
+      <label class="chip-toggle" id="installedToggle"><input type="checkbox" style="display:none" /> <span data-i18n="mp_installed_only">仅看已安装</span></label>
     </div>
     <div class="chips" id="chips"></div>
     <div class="grid" id="grid"></div>
-    <div class="empty" id="empty" style="display:none">没有匹配的技能，换个关键词试试。</div>
+    <div class="empty" id="empty" data-i18n="mp_empty" style="display:none">没有匹配的技能，换个关键词试试。</div>
   </div>
 
   <!-- GitHub 远程视图（仿 skillhub：默认列出全部、分类、一键安装，仓库/Token 收进高级设置） -->
   <div id="remoteView" style="display:none">
     <details class="src-settings">
-      <summary>⚙ 数据源设置（高级）</summary>
+      <summary data-i18n="mp_remote_settings">⚙ 数据源设置（高级）</summary>
       <div class="repo-manager">
         <div class="repo-list" id="repoList"></div>
         <div class="add-repo">
-          <input id="repoInput" placeholder="添加 GitHub 仓库（owner/repo 或完整链接）" />
-          <input id="tokenInput" type="password" placeholder="GitHub Token（可选，提升速率）" />
-          <button class="btn-ghost" id="addRepoBtn">添加</button>
-          <button class="btn-ghost" id="refreshRemoteBtn">↻ 刷新</button>
+          <input id="repoInput" data-i18n-ph="mp_repo_ph" placeholder="添加 GitHub 仓库（owner/repo 或完整链接）" />
+          <input id="tokenInput" type="password" data-i18n-ph="mp_token_ph" placeholder="GitHub Token（可选，提升速率）" />
+          <button class="btn-ghost" id="addRepoBtn" data-i18n="mp_add">添加</button>
+          <button class="btn-ghost" id="refreshRemoteBtn" data-i18n="mp_refresh">↻ 刷新</button>
         </div>
-        <p class="hint-sm">默认已接入 <b>anthropics/skills</b> 作为远程市场；无需填任何链接或密钥即可浏览与安装。遇到 GitHub 匿名限速（60 次/小时）可在此填 Token 或换其他仓库。</p>
+        <p class="hint-sm" data-i18n-html="mp_remote_hint">默认已接入 <b>anthropics/skills</b> 作为远程市场；无需填任何链接或密钥即可浏览与安装。遇到 GitHub 匿名限速（60 次/小时）可在此填 Token 或换其他仓库。</p>
       </div>
     </details>
     <div class="toolbar">
       <div class="search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="remoteSearch" placeholder="搜索技能、标签、分类…" autocomplete="off" readonly />
+        <input id="remoteSearch" data-i18n-ph="mp_search_ph" placeholder="搜索技能、标签、分类…" autocomplete="off" readonly />
       </div>
     </div>
     <div class="chips" id="remoteChips"></div>
     <div class="grid" id="remoteGrid"></div>
-    <div class="empty" id="remoteEmpty" style="display:none">没有匹配的远程技能，换个关键词试试。</div>
+    <div class="empty" id="remoteEmpty" data-i18n="mp_remote_empty" style="display:none">没有匹配的远程技能，换个关键词试试。</div>
     <div class="remote-errors" id="remoteErrors"></div>
   </div>
 </div>
@@ -382,55 +383,58 @@
 <!-- Publish Modal -->
 <div class="modal" id="modal">
   <div class="panel">
-    <h2>发布技能到市场</h2>
-    <p class="hint">复制一个已有技能（填 slug/名称），或直接新建（填名称 + 正文）。发布后会打包为 .skill、计算 sha256 并扫描危险脚本。</p>
+    <h2 data-i18n="mp_publish_title">发布技能到市场</h2>
+    <p class="hint" data-i18n="mp_publish_hint">复制一个已有技能（填 slug/名称），或直接新建（填名称 + 正文）。发布后会打包为 .skill、计算 sha256 并扫描危险脚本。</p>
     <div class="field">
-      <label>来源技能名 / slug（复制模式，可留空走新建）</label>
-      <input id="pSlug" placeholder="例如 pdf / docx / offline-office" />
+      <label data-i18n="mp_src_skill_ph">来源技能名 / slug（复制模式，可留空走新建）</label>
+      <input id="pSlug" data-i18n-ph="mp_slug_ph" placeholder="例如 pdf / docx / offline-office" />
     </div>
     <div class="row2">
       <div class="field">
-        <label>技能名称（新建必填）</label>
-        <input id="pName" placeholder="我的技能" />
+        <label data-i18n="mp_name_label">技能名称（新建必填）</label>
+        <input id="pName" data-i18n-ph="mp_name_ph" placeholder="我的技能" />
       </div>
       <div class="field">
-        <label>版本</label>
+        <label data-i18n="mp_version">版本</label>
         <input id="pVersion" placeholder="1.0.0" value="1.0.0" />
       </div>
     </div>
     <div class="field">
-      <label>一句话描述</label>
-      <input id="pDesc" placeholder="这个技能能做什么" />
+      <label data-i18n="mp_desc_one">一句话描述</label>
+      <input id="pDesc" data-i18n-ph="mp_desc_ph" placeholder="这个技能能做什么" />
     </div>
     <div class="field">
-      <label>SKILL.md 正文（新建模式）</label>
-      <textarea id="pBody" placeholder="# 技能名&#10;&#10;执行步骤…"></textarea>
+      <label data-i18n="mp_body">SKILL.md 正文（新建模式）</label>
+      <textarea id="pBody" data-i18n-ph="mp_body_ph" placeholder="# 技能名&#10;&#10;执行步骤…"></textarea>
     </div>
     <div class="row2">
       <div class="field">
-        <label>分类</label>
-        <input id="pCategory" placeholder="如 文档/写作" />
+        <label data-i18n="mp_category">分类</label>
+        <input id="pCategory" data-i18n-ph="mp_category_ph" placeholder="如 文档/写作" />
       </div>
       <div class="field">
-        <label>标签（逗号分隔）</label>
-        <input id="pTags" placeholder="pdf, 文档, 转换" />
+        <label data-i18n="mp_tags">标签（逗号分隔）</label>
+        <input id="pTags" data-i18n-ph="mp_tags_ph" placeholder="pdf, 文档, 转换" />
       </div>
     </div>
     <div class="field">
-      <label>声明的权限（默认全关 → 沙箱运行）</label>
+      <label data-i18n="mp_perms_label">声明的权限（默认全关 → 沙箱运行）</label>
       <div class="checks">
-        <label><input type="checkbox" id="pNet" /> 网络</label>
-        <label><input type="checkbox" id="pWrite" /> 文件写</label>
-        <label><input type="checkbox" id="pShell" /> Shell</label>
+        <label><input type="checkbox" id="pNet" /> <span data-i18n="mp_perm_net">网络</span></label>
+        <label><input type="checkbox" id="pWrite" /> <span data-i18n="mp_perm_write">文件写</span></label>
+        <label><input type="checkbox" id="pShell" /> <span data-i18n="mp_perm_shell">Shell</span></label>
       </div>
     </div>
     <div class="field">
-      <label>信任级</label>
-      <select id="pTrust"><option value="sandboxed">sandboxed（默认·受限沙箱）</option><option value="trusted">trusted（直接运行）</option></select>
+      <label data-i18n="mp_trust">信任级</label>
+      <select id="pTrust">
+        <option value="sandboxed" data-i18n="mp_trust_sandboxed">sandboxed（默认·受限沙箱）</option>
+        <option value="trusted" data-i18n="mp_trust_trusted">trusted（直接运行）</option>
+      </select>
     </div>
     <div class="actions">
-      <button class="btn-ghost" id="modalCancel">取消</button>
-      <button class="btn-primary" id="modalSubmit">发布</button>
+      <button class="btn-ghost" id="modalCancel" data-i18n="cancel">取消</button>
+      <button class="btn-primary" id="modalSubmit" data-i18n="mp_publish_submit">发布</button>
     </div>
   </div>
 </div>
@@ -442,6 +446,216 @@
   const $ = (s) => document.querySelector(s);
   const api = (p, opt) => fetch(p, { cache: 'no-store', ...(opt || {}) }).then(r => r.json());
 
+  // ── i18n（独立词典；复用主控制台的 dasha_lang 存储键，使两处语言一致）──
+  const I18N = {
+    zh: {
+      mp_page_title: '技能市场 · Skill Marketplace',
+      mp_title: '技能市场',
+      mp_subtitle: 'Skill Marketplace · 社区分享 · 自托管注册中心',
+      mp_lang_title: '语言 / Language',
+      mp_theme_title: '切换主题',
+      mp_publish: '+ 发布技能',
+      mp_local: '本地市场',
+      mp_remote: 'GitHub 远程',
+      mp_search_ph: '搜索技能、标签、分类…',
+      sort_popular: '最热门',
+      sort_rating: '评分最高',
+      sort_newest: '最新发布',
+      sort_name: '名称 A-Z',
+      mp_installed_only: '仅看已安装',
+      mp_empty: '没有匹配的技能，换个关键词试试。',
+      mp_remote_settings: '⚙ 数据源设置（高级）',
+      mp_repo_ph: '添加 GitHub 仓库（owner/repo 或完整链接）',
+      mp_token_ph: 'GitHub Token（可选，提升速率）',
+      mp_add: '添加',
+      mp_refresh: '↻ 刷新',
+      mp_remote_hint: '默认已接入 <b>anthropics/skills</b> 作为远程市场；无需填任何链接或密钥即可浏览与安装。遇到 GitHub 匿名限速（60 次/小时）可在此填 Token 或换其他仓库。',
+      mp_remote_empty: '没有匹配的远程技能，换个关键词试试。',
+      mp_publish_title: '发布技能到市场',
+      mp_publish_hint: '复制一个已有技能（填 slug/名称），或直接新建（填名称 + 正文）。发布后会打包为 .skill、计算 sha256 并扫描危险脚本。',
+      mp_src_skill_ph: '来源技能名 / slug（复制模式，可留空走新建）',
+      mp_slug_ph: '例如 pdf / docx / offline-office',
+      mp_name_label: '技能名称（新建必填）',
+      mp_name_ph: '我的技能',
+      mp_version: '版本',
+      mp_desc_one: '一句话描述',
+      mp_desc_ph: '这个技能能做什么',
+      mp_body: 'SKILL.md 正文（新建模式）',
+      mp_body_ph: '# 技能名\n\n执行步骤…',
+      mp_category: '分类',
+      mp_category_ph: '如 文档/写作',
+      mp_tags: '标签（逗号分隔）',
+      mp_tags_ph: 'pdf, 文档, 转换',
+      mp_perms_label: '声明的权限（默认全关 → 沙箱运行）',
+      mp_perm_net: '网络',
+      mp_perm_write: '文件写',
+      mp_perm_shell: 'Shell',
+      mp_trust: '信任级',
+      mp_trust_sandboxed: 'sandboxed（默认·受限沙箱）',
+      mp_trust_trusted: 'trusted（直接运行）',
+      cancel: '取消',
+      mp_publish_submit: '发布',
+      mp_installed: '已安装',
+      mp_no_desc: '（无描述）',
+      mp_none: '（无）',
+      mp_desc_h: '描述',
+      mp_tags_h: '标签',
+      mp_trust_h: '信任级 / 状态',
+      mp_perms_h: '声明权限',
+      mp_danger_h: '⚠ 危险脚本扫描（{n}）',
+      mp_rating_h: '评分',
+      mp_submit_rating: '提交评分',
+      mp_rate_comment_ph: '写下你的评价（可选）',
+      mp_unrated: '未下载',
+      mp_notinstalled: '未安装',
+      mp_trusted_on: 'TRUSTED · 直接运行',
+      mp_sandbox_on: 'SANDBOX · 受限沙箱',
+      mp_unsupported: '未找到该远程技能',
+      mp_install: '安装',
+      mp_install_local: '安装到本机',
+      mp_uninstall: '卸载',
+      mp_all: '全部',
+      mp_add_repo_ok: '已添加仓库',
+      mp_fill_repo: '请填写仓库地址',
+      mp_installing: '安装中…',
+      mp_installing_remote: '安装中：{n}（下载并解包）…',
+      mp_danger_found: '⚠ 检出 {n} 处危险脚本，已沙箱安装',
+      mp_installed_toast: '已安装：{n}',
+      mp_uninstall_toast: '已卸载：{n}',
+      mp_install_fail: '安装失败',
+      mp_rate_first: '请先点星',
+      mp_rate_ok: '评分成功',
+      mp_fill_src: '请填来源技能名或新建名称',
+      mp_fill_body: '新建模式需填写 SKILL.md 正文',
+      mp_publishing: '发布中…',
+      mp_published: '已发布：{n}',
+      mp_theme_sys: '跟随系统',
+      mp_theme_light: '亮色',
+      mp_theme_dark: '暗色',
+      mp_theme_toast: '主题：{n}',
+      mp_remove_title: '移除'
+    },
+    en: {
+      mp_page_title: 'Skill Marketplace · 技能市场',
+      mp_title: 'Skill Marketplace',
+      mp_subtitle: 'Skill Marketplace · Community sharing · self-hosted registry',
+      mp_lang_title: 'Language / 语言',
+      mp_theme_title: 'Toggle theme',
+      mp_publish: '+ Publish Skill',
+      mp_local: 'Local Market',
+      mp_remote: 'GitHub Remote',
+      mp_search_ph: 'Search skills, tags, categories…',
+      sort_popular: 'Most popular',
+      sort_rating: 'Top rated',
+      sort_newest: 'Newest',
+      sort_name: 'Name A-Z',
+      mp_installed_only: 'Installed only',
+      mp_empty: 'No matching skills. Try a different keyword.',
+      mp_remote_settings: '⚙ Data source settings (advanced)',
+      mp_repo_ph: 'Add a GitHub repo (owner/repo or full URL)',
+      mp_token_ph: 'GitHub Token (optional, raises rate limit)',
+      mp_add: 'Add',
+      mp_refresh: '↻ Refresh',
+      mp_remote_hint: 'Connected to <b>anthropics/skills</b> as the default remote market; browse and install without any link or token. If you hit GitHub anonymous rate limits (60/hr), add a token here or switch repos.',
+      mp_remote_empty: 'No matching remote skills. Try a different keyword.',
+      mp_publish_title: 'Publish a skill to the market',
+      mp_publish_hint: 'Clone an existing skill (enter slug/name), or create new (name + body). On publish it is packed into a .skill, sha256 computed, and scanned for dangerous scripts.',
+      mp_src_skill_ph: 'Source skill name / slug (clone mode; leave empty to create new)',
+      mp_slug_ph: 'e.g. pdf / docx / offline-office',
+      mp_name_label: 'Skill name (required for new)',
+      mp_name_ph: 'My skill',
+      mp_version: 'Version',
+      mp_desc_one: 'One-line description',
+      mp_desc_ph: 'What does this skill do',
+      mp_body: 'SKILL.md body (new mode)',
+      mp_body_ph: '# Skill name\n\nSteps…',
+      mp_category: 'Category',
+      mp_category_ph: 'e.g. Docs/Writing',
+      mp_tags: 'Tags (comma separated)',
+      mp_tags_ph: 'pdf, docs, convert',
+      mp_perms_label: 'Declared permissions (all off by default → sandboxed)',
+      mp_perm_net: 'Network',
+      mp_perm_write: 'File write',
+      mp_perm_shell: 'Shell',
+      mp_trust: 'Trust level',
+      mp_trust_sandboxed: 'sandboxed (default · restricted)',
+      mp_trust_trusted: 'trusted (runs directly)',
+      cancel: 'Cancel',
+      mp_publish_submit: 'Publish',
+      mp_installed: 'Installed',
+      mp_no_desc: '(no description)',
+      mp_none: '(none)',
+      mp_desc_h: 'Description',
+      mp_tags_h: 'Tags',
+      mp_trust_h: 'Trust level / status',
+      mp_perms_h: 'Declared permissions',
+      mp_danger_h: '⚠ Dangerous script scan ({n})',
+      mp_rating_h: 'Rating',
+      mp_submit_rating: 'Submit rating',
+      mp_rate_comment_ph: 'Write a review (optional)',
+      mp_unrated: 'Not downloaded',
+      mp_notinstalled: 'Not installed',
+      mp_trusted_on: 'TRUSTED · runs directly',
+      mp_sandbox_on: 'SANDBOX · restricted',
+      mp_unsupported: 'Remote skill not found',
+      mp_install: 'Install',
+      mp_install_local: 'Install locally',
+      mp_uninstall: 'Uninstall',
+      mp_all: 'All',
+      mp_add_repo_ok: 'Repo added',
+      mp_fill_repo: 'Please enter a repo URL',
+      mp_installing: 'Installing…',
+      mp_installing_remote: 'Installing: {n} (download & unpack)…',
+      mp_danger_found: '⚠ {n} dangerous script(s) detected, installed to sandbox',
+      mp_installed_toast: 'Installed: {n}',
+      mp_uninstall_toast: 'Uninstalled: {n}',
+      mp_install_fail: 'Install failed',
+      mp_rate_first: 'Please tap a star first',
+      mp_rate_ok: 'Rating submitted',
+      mp_fill_src: 'Enter a source skill name or a new name',
+      mp_fill_body: 'New mode requires SKILL.md body',
+      mp_publishing: 'Publishing…',
+      mp_published: 'Published: {n}',
+      mp_theme_sys: 'System',
+      mp_theme_light: 'Light',
+      mp_theme_dark: 'Dark',
+      mp_theme_toast: 'Theme: {n}',
+      mp_remove_title: 'Remove'
+    }
+  };
+  let _lang = 'zh';
+  try { const s = localStorage.getItem('dasha_lang'); if (s === 'zh' || s === 'en') _lang = s; } catch (e) {}
+  function t(key, vars) {
+    const d = I18N[_lang] || I18N.zh;
+    let s = d[key];
+    if (s === undefined) s = I18N.zh[key];
+    if (s === undefined) s = key;
+    if (vars) { for (const k in vars) { if (Object.prototype.hasOwnProperty.call(vars, k)) s = s.split('{' + k + '}').join(String(vars[k])); } }
+    return s;
+  }
+  function getLang() { return _lang; }
+  function applyI18n() {
+    document.documentElement.setAttribute('lang', _lang === 'en' ? 'en' : 'zh-CN');
+    document.title = t('mp_page_title');
+    document.querySelectorAll('[data-i18n]').forEach(n => { n.textContent = t(n.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(n => { n.setAttribute('placeholder', t(n.getAttribute('data-i18n-ph'))); });
+    document.querySelectorAll('[data-i18n-title]').forEach(n => { n.setAttribute('title', t(n.getAttribute('data-i18n-title'))); });
+    document.querySelectorAll('[data-i18n-html]').forEach(n => { n.innerHTML = t(n.getAttribute('data-i18n-html')); });
+    const lb = document.getElementById('langBtn'); if (lb) lb.textContent = _lang === 'zh' ? 'EN' : '中';
+  }
+  function rerender() {
+    if (state.src === 'local') { renderChips(); applyFilter(); }
+    else { renderRemoteChips(); renderRemoteGrid(); }
+    if (currentDrawer) openDrawer(currentDrawer.slug, currentDrawer.isRemote);
+  }
+  function setLang(l) {
+    if (l !== 'zh' && l !== 'en') return;
+    _lang = l;
+    try { localStorage.setItem('dasha_lang', l); } catch (e) {}
+    applyI18n(); rerender();
+  }
+  function toggleLang() { setLang(_lang === 'zh' ? 'en' : 'zh'); }
+
   // ── 主题 ──
   const THEME_KEY = 'ah_marketplace_theme';
   function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
@@ -451,11 +665,28 @@
     const cur = document.documentElement.getAttribute('data-theme');
     const next = order[(order.indexOf(cur) + 1) % 3];
     applyTheme(next); localStorage.setItem(THEME_KEY, next);
-    toast('主题：' + ({ system: '跟随系统', light: '亮色', dark: '暗色' }[next]));
+    const tn = { system: t('mp_theme_sys'), light: t('mp_theme_light'), dark: t('mp_theme_dark') }[next];
+    toast(t('mp_theme_toast', { n: tn }));
   };
+  $('#langBtn').onclick = toggleLang;
 
   // ── 状态 ──
   const state = { src: 'local', q: '', category: 'all', tag: '', sort: 'popular', installedOnly: false, categories: [], remoteCategory: 'all' };
+
+  // 分类中文→英文映射（词表来源于 server/src/skills/loader.ts CATEGORY_ORDER + 默认值「其他」）。
+  // 显示用英文名，但筛选仍用原始中文值，故不影响后端匹配逻辑。
+  const CAT_EN = {
+    '文档/写作': 'Docs/Writing',
+    '图像/视频': 'Image/Video',
+    '代码/开发': 'Code/Dev',
+    '研究/数据': 'Research/Data',
+    '效率/自动化': 'Productivity/Automation',
+    '系统/文件': 'System/Files',
+    '社交/通讯': 'Social/Comms',
+    '其他': 'Other'
+  };
+  function catLabel(c) { return _lang === 'en' ? (CAT_EN[c] || c) : c; }
+  let currentDrawer = null;
   let remoteSkills = [], remoteErrors = [], remoteRepos = [];
 
   // ── 工具 ──
@@ -500,7 +731,7 @@
     all.forEach(cat => {
       const el = document.createElement('div');
       el.className = 'chip' + (state.category === cat ? ' active' : '');
-      el.textContent = cat === 'all' ? '全部' : cat;
+      el.textContent = cat === 'all' ? t('mp_all') : catLabel(cat);
       el.onclick = () => { state.category = cat; renderChips(); applyFilter(); };
       wrap.appendChild(el);
     });
@@ -542,13 +773,13 @@
     const el = document.createElement('div'); el.className = 'card';
     const danger = (s.dangerFlags || []).length;
     el.innerHTML =
-      '<span class="cat">' + esc(s.category || '其他') + '</span>' +
+      '<span class="cat">' + esc(catLabel(s.category || '其他')) + '</span>' +
       '<h3>' + esc(s.name) + '</h3>' +
-      '<p class="desc">' + esc(s.description || '（无描述）') + '</p>' +
+      '<p class="desc">' + esc(s.description || t('mp_no_desc')) + '</p>' +
       '<div class="tags">' + (s.tags || []).slice(0, 4).map(t => '<span class="tag">#' + esc(t) + '</span>').join('') + '</div>' +
       '<div class="meta">' +
         '<div>' +
-          (s.installed ? '<span class="badge installed">已安装</span> ' : '') +
+          (s.installed ? '<span class="badge installed">' + t('mp_installed') + '</span> ' : '') +
           '<span class="badge ' + s.trust + '">' + (s.trust === 'trusted' ? 'TRUSTED' : 'SANDBOX') + '</span>' +
           (danger ? ' <span class="badge danger">⚠ ' + danger + '</span>' : '') +
         '</div>' +
@@ -578,19 +809,19 @@
     const wrap = $('#repoList'); wrap.innerHTML = '';
     remoteRepos.forEach(r => {
       const el = document.createElement('div'); el.className = 'repo-item';
-      el.innerHTML = '<span>' + esc(r.label || r.url) + '</span><span class="rm" title="移除">✕</span>';
+      el.innerHTML = '<span>' + esc(r.label || r.url) + '</span><span class="rm" title="' + t('mp_remove_title') + '">✕</span>';
       el.querySelector('.rm').onclick = () => removeRepo(r.url);
       wrap.appendChild(el);
     });
   }
   $('#addRepoBtn').onclick = async () => {
-    const url = $('#repoInput').value.trim(); if (!url) { toast('请填写仓库地址', 'err'); return; }
+    const url = $('#repoInput').value.trim(); if (!url) { toast(t('mp_fill_repo'), 'err'); return; }
     const token = $('#tokenInput').value.trim();
     const exists = remoteRepos.some(r => r.url === url);
     const repos = exists ? remoteRepos : [...remoteRepos, { url, label: url }];
     const r = await api('/api/marketplace/remote/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ repos, token }) });
     if (r.error) { toast(r.error, 'err'); return; }
-    $('#repoInput').value = ''; remoteRepos = (r.config && r.config.repos) || repos; renderRepos(); loadRemote('', true); toast('已添加仓库', 'ok');
+    $('#repoInput').value = ''; remoteRepos = (r.config && r.config.repos) || repos; renderRepos(); loadRemote('', true); toast(t('mp_add_repo_ok'), 'ok');
   };
   async function removeRepo(url) {
     const repos = remoteRepos.filter(r => r.url !== url);
@@ -621,7 +852,7 @@
     ['all', ...cats].forEach(cat => {
       const el = document.createElement('div');
       el.className = 'chip' + (state.remoteCategory === cat ? ' active' : '');
-      el.textContent = cat === 'all' ? '全部' : cat;
+      el.textContent = cat === 'all' ? t('mp_all') : catLabel(cat);
       el.onclick = () => { state.remoteCategory = cat; renderRemoteChips(); renderRemoteGrid(); };
       wrap.appendChild(el);
     });
@@ -640,17 +871,17 @@
   function remoteCard(s) {
     const el = document.createElement('div'); el.className = 'card';
     const danger = (s.dangerFlags || []).length;
-    let btn = '<button class="card-btn" data-act="install-remote">安装</button>';
-    if (s.installed) btn = '<button class="card-btn" disabled>已安装</button>';
+    let btn = '<button class="card-btn" data-act="install-remote">' + t('mp_install') + '</button>';
+    if (s.installed) btn = '<button class="card-btn" disabled>' + t('mp_installed') + '</button>';
     el.innerHTML =
-      '<span class="cat">' + esc(s.category || '其他') + '</span>' +
+      '<span class="cat">' + esc(catLabel(s.category || '其他')) + '</span>' +
       '<h3>' + esc(s.name) + '</h3>' +
-      '<p class="desc">' + esc(s.description || '（无描述）') + '</p>' +
+      '<p class="desc">' + esc(s.description || t('mp_no_desc')) + '</p>' +
       '<div class="tags">' + (s.tags || []).slice(0, 4).map(t => '<span class="tag">#' + esc(t) + '</span>').join('') + '</div>' +
       '<div class="meta">' +
         '<div>' +
           '<span class="badge remote">GitHub</span> ' +
-          (s.installed ? '<span class="badge installed">已安装</span> ' : '') +
+          (s.installed ? '<span class="badge installed">' + t('mp_installed') + '</span> ' : '') +
           '<span class="badge ' + s.trust + '">' + (s.trust === 'trusted' ? 'TRUSTED' : 'SANDBOX') + '</span>' +
           (danger ? ' <span class="badge danger">⚠ ' + danger + '</span>' : '') +
         '</div>' + btn +
@@ -661,84 +892,85 @@
     return el;
   }
   async function remoteAction(s) {
-    if (s.installed) { toast('已安装：' + s.name); return; }
-    toast('安装中：' + s.name + '（下载并解包）…');
+    if (s.installed) { toast(t('mp_installed_toast', { n: s.name })); return; }
+    toast(t('mp_installing_remote', { n: s.name }));
     try {
       const r = await api('/api/marketplace/skills/' + encodeURIComponent(s.slug) + '/install-remote', { method: 'POST' });
       if (r.error) { toast(r.error, 'err'); return; }
-      if (r.dangerFlags && r.dangerFlags.length) toast('⚠ 检出 ' + r.dangerFlags.length + ' 处危险脚本，已沙箱安装', 'err');
-      toast('已安装：' + (r.entry ? r.entry.name : s.name), 'ok');
+      if (r.dangerFlags && r.dangerFlags.length) toast(t('mp_danger_found', { n: r.dangerFlags.length }), 'err');
+      toast(t('mp_installed_toast', { n: (r.entry ? r.entry.name : s.name) }), 'ok');
       loadRemote($('#remoteSearch').value.trim(), false);
-    } catch (e) { toast('安装失败', 'err'); }
+    } catch (e) { toast(t('mp_install_fail'), 'err'); }
   }
 
   // ══════ Drawer（本地 + 远程共用）══════
   async function openDrawer(slug, isRemote) {
+    currentDrawer = { slug, isRemote };
     let s;
-    if (isRemote) { s = remoteSkills.find(x => x.slug === slug); if (!s) { toast('未找到该远程技能', 'err'); return; } }
+    if (isRemote) { s = remoteSkills.find(x => x.slug === slug); if (!s) { toast(t('mp_unsupported'), 'err'); return; } }
     else {
       s = await api('/api/marketplace/skills/' + encodeURIComponent(slug));
       if (s.error) { toast(s.error, 'err'); return; }
     }
     $('#dName').textContent = s.name;
-    $('#dSub').textContent = 'v' + s.version + (s.author ? ' · by ' + s.author : '') + ' · ' + s.category + (isRemote ? ' · GitHub' : '');
+    $('#dSub').textContent = 'v' + s.version + (s.author ? ' · by ' + s.author : '') + ' · ' + catLabel(s.category) + (isRemote ? ' · GitHub' : '');
     const perms = s.permissions || {}; const df = s.dangerFlags || [];
     $('#dBody').innerHTML =
-      '<div class="section"><h4>描述</h4><p>' + esc(s.description || '（无）') + '</p></div>' +
-      '<div class="section"><h4>标签</h4><div class="tags">' + (s.tags || []).map(t => '<span class="tag">#' + esc(t) + '</span>').join('') + '</div></div>' +
-      '<div class="section"><h4>信任级 / 状态</h4><p>' +
-        '<span class="badge ' + s.trust + '">' + (s.trust === 'trusted' ? 'TRUSTED · 直接运行' : 'SANDBOX · 受限沙箱') + '</span> ' +
-        (s.installed ? '<span class="badge installed">已安装</span>' : (s.source === 'remote' ? '<span class="badge remote">未下载</span>' : '<span class="badge">未安装</span>')) + '</p></div>' +
-      '<div class="section"><h4>声明权限</h4><div class="perms">' +
-        permBadge('网络', perms.network) + permBadge('文件写', perms.fileWrite) + permBadge('Shell', perms.shell) +
+      '<div class="section"><h4>' + t('mp_desc_h') + '</h4><p>' + esc(s.description || t('mp_none')) + '</p></div>' +
+      '<div class="section"><h4>' + t('mp_tags_h') + '</h4><div class="tags">' + (s.tags || []).map(t => '<span class="tag">#' + esc(t) + '</span>').join('') + '</div></div>' +
+      '<div class="section"><h4>' + t('mp_trust_h') + '</h4><p>' +
+        '<span class="badge ' + s.trust + '">' + (s.trust === 'trusted' ? t('mp_trusted_on') : t('mp_sandbox_on')) + '</span> ' +
+        (s.installed ? '<span class="badge installed">' + t('mp_installed') + '</span>' : (s.source === 'remote' ? '<span class="badge remote">' + t('mp_unrated') + '</span>' : '<span class="badge">' + t('mp_notinstalled') + '</span>')) + '</p></div>' +
+      '<div class="section"><h4>' + t('mp_perms_h') + '</h4><div class="perms">' +
+        permBadge(t('mp_perm_net'), perms.network) + permBadge(t('mp_perm_write'), perms.fileWrite) + permBadge(t('mp_perm_shell'), perms.shell) +
       '</div></div>' +
-      (df.length ? '<div class="section"><h4>⚠ 危险脚本扫描（' + df.length + '）</h4><ul class="dflist">' +
+      (df.length ? '<div class="section"><h4>' + t('mp_danger_h', { n: df.length }) + '</h4><ul class="dflist">' +
         df.slice(0, 12).map(d => '<li>' + esc(d.file) + ':' + d.line + ' — ' + esc(d.pattern) + '</li>').join('') + '</ul></div>' : '') +
       (isRemote ? '' :
-        '<div class="section"><h4>评分</h4>' + starsHtml(s.rating || 0, s.ratingsCount || 0) +
+        '<div class="section"><h4>' + t('mp_rating_h') + '</h4>' + starsHtml(s.rating || 0, s.ratingsCount || 0) +
           '<div class="rate" id="rateWidget" style="margin-top:10px">' +
             [1,2,3,4,5].map(i => '<span data-v="' + i + '">★</span>').join('') + '</div>' +
-          '<textarea id="rateComment" placeholder="写下你的评价（可选）" style="width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font);min-height:64px"></textarea>' +
-          '<button class="btn-ghost" id="rateBtn" style="margin-top:8px;width:100%">提交评分</button>' +
+          '<textarea id="rateComment" placeholder="' + t('mp_rate_comment_ph') + '" style="width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font);min-height:64px"></textarea>' +
+          '<button class="btn-ghost" id="rateBtn" style="margin-top:8px;width:100%">' + t('mp_submit_rating') + '</button>' +
         '</div>');
 
     if (!isRemote) {
       const rw = $('#rateWidget'); let picked = 0;
       rw.querySelectorAll('span').forEach(sp => { sp.onclick = () => { picked = +sp.dataset.v; rw.querySelectorAll('span').forEach(x => x.classList.toggle('on', +x.dataset.v <= picked)); }; });
       $('#rateBtn').onclick = async () => {
-        if (!picked) { toast('请先点星', 'err'); return; }
+        if (!picked) { toast(t('mp_rate_first'), 'err'); return; }
         const r = await api('/api/marketplace/skills/' + encodeURIComponent(slug) + '/rate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stars: picked, comment: $('#rateComment').value }) });
-        if (r.error) toast(r.error, 'err'); else { toast('评分成功', 'ok'); openDrawer(slug, false); }
+        if (r.error) toast(r.error, 'err'); else { toast(t('mp_rate_ok'), 'ok'); openDrawer(slug, false); }
       };
     }
 
     // foot actions
     const foot = $('#dFoot'); foot.innerHTML = '';
     if (isRemote) {
-      if (s.installed) { const b = document.createElement('button'); b.className = 'btn-ghost'; b.textContent = '卸载'; b.onclick = () => doUninstall(slug, () => loadRemote($('#remoteSearch').value.trim(), false)); foot.appendChild(b); }
-      else { const b = document.createElement('button'); b.className = 'btn-primary'; b.textContent = '安装'; b.onclick = () => remoteAction(s); foot.appendChild(b); }
+      if (s.installed) { const b = document.createElement('button'); b.className = 'btn-ghost'; b.textContent = t('mp_uninstall'); b.onclick = () => doUninstall(slug, () => loadRemote($('#remoteSearch').value.trim(), false)); foot.appendChild(b); }
+      else { const b = document.createElement('button'); b.className = 'btn-primary'; b.textContent = t('mp_install'); b.onclick = () => remoteAction(s); foot.appendChild(b); }
     } else {
-      if (s.installed) { const b = document.createElement('button'); b.className = 'btn-ghost'; b.textContent = '卸载'; b.onclick = () => doUninstall(slug, reload); foot.appendChild(b); }
-      else { const b = document.createElement('button'); b.className = 'btn-primary'; b.textContent = '安装到本机'; b.onclick = () => doInstall(slug, reload); foot.appendChild(b); }
+      if (s.installed) { const b = document.createElement('button'); b.className = 'btn-ghost'; b.textContent = t('mp_uninstall'); b.onclick = () => doUninstall(slug, reload); foot.appendChild(b); }
+      else { const b = document.createElement('button'); b.className = 'btn-primary'; b.textContent = t('mp_install_local'); b.onclick = () => doInstall(slug, reload); foot.appendChild(b); }
     }
     $('#overlay').classList.add('show'); $('#drawer').classList.add('show');
   }
-  function closeDrawer() { $('#overlay').classList.remove('show'); $('#drawer').classList.remove('show'); }
+  function closeDrawer() { currentDrawer = null; $('#overlay').classList.remove('show'); $('#drawer').classList.remove('show'); }
   $('#overlay').onclick = closeDrawer;
   $('#drawerClose').onclick = closeDrawer;
 
   async function doInstall(slug, refresh) {
-    toast('安装中…');
+    toast(t('mp_installing'));
     const r = await api('/api/marketplace/skills/' + encodeURIComponent(slug) + '/install', { method: 'POST' });
     if (r.error) { toast(r.error, 'err'); return; }
-    toast('已安装：' + (r.entry ? r.entry.name : slug), 'ok');
-    if (r.dangerFlags && r.dangerFlags.length) toast('⚠ 检出 ' + r.dangerFlags.length + ' 处危险脚本，已沙箱安装', 'err');
+    toast(t('mp_installed_toast', { n: (r.entry ? r.entry.name : slug) }), 'ok');
+    if (r.dangerFlags && r.dangerFlags.length) toast(t('mp_danger_found', { n: r.dangerFlags.length }), 'err');
     closeDrawer(); if (refresh) refresh();
   }
   async function doUninstall(slug, refresh) {
     const r = await api('/api/marketplace/skills/' + encodeURIComponent(slug) + '/uninstall', { method: 'POST' });
     if (r.error) { toast(r.error, 'err'); return; }
-    toast('已卸载：' + slug); closeDrawer(); if (refresh) refresh();
+    toast(t('mp_uninstall_toast', { n: slug })); closeDrawer(); if (refresh) refresh();
   }
 
   // ══════ Publish Modal ══════
@@ -756,13 +988,13 @@
       permissions: { network: $('#pNet').checked, fileWrite: $('#pWrite').checked, shell: $('#pShell').checked },
       trust: $('#pTrust').value,
     };
-    if (!body.slug && !body.name) { toast('请填来源技能名或新建名称', 'err'); return; }
-    if (!body.slug && !body.body) { toast('新建模式需填写 SKILL.md 正文', 'err'); return; }
-    $('#modalSubmit').textContent = '发布中…';
+    if (!body.slug && !body.name) { toast(t('mp_fill_src'), 'err'); return; }
+    if (!body.slug && !body.body) { toast(t('mp_fill_body'), 'err'); return; }
+    $('#modalSubmit').textContent = t('mp_publishing');
     const r = await api('/api/marketplace/skills', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    $('#modalSubmit').textContent = '发布';
+    $('#modalSubmit').textContent = t('mp_publish_submit');
     if (r.error) { toast(r.error, 'err'); return; }
-    toast('已发布：' + (r.entry ? r.entry.name : body.name), 'ok');
+    toast(t('mp_published', { n: (r.entry ? r.entry.name : body.name) }), 'ok');
     modal.classList.remove('show'); loadCategories(); loadAll();
   };
 
@@ -777,6 +1009,7 @@
   }
   window.addEventListener('pageshow', (e) => { if (e.persisted) { clearSearch(); loadCategories(); loadAll(); } });
   clearSearch();
+  applyI18n();
   loadCategories();
   loadAll();
 })();

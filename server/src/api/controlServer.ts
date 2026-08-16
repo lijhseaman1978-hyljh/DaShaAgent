@@ -44,7 +44,19 @@ export function createControlApp(runtime: ControllableRuntime, opts: AgentContro
   const controller = new AgentController(runtime, opts);
   const app = express();
 
-  app.use(cors());
+  // CORS：默认仅允许同机(localhost/127.0.0.1)来源跨域；暴露局域网时通过 AH_CORS_ORIGINS 配置白名单（逗号分隔）
+  const corsAllowed = (process.env.AH_CORS_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  app.use(cors({
+    origin(origin, cb) {
+      if (!origin) return cb(null, true); // 同源/无来源（curl、健康检查、服务端调用）放行
+      let host = '';
+      try { host = new URL(origin).hostname; } catch { return cb(null, false); }
+      const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '::1';
+      if (isLocal || corsAllowed.includes(origin)) return cb(null, true);
+      return cb(null, false);
+    },
+    credentials: true,
+  }));
   app.use(express.json({ limit: '2mb' }));
 
   // ── §四：状态 ──

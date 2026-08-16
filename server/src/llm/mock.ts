@@ -14,7 +14,15 @@ export class MockProvider implements Provider {
     // 若对话中已存在工具结果，说明工具已执行，直接给最终总结，避免重复发起工具调用（防死循环）
     if (opts.messages.some(m => m.role === 'tool')) {
       const toolRes = opts.messages.filter(m => m.role === 'tool').slice(-1)[0];
-      const summary = `【Mock】已根据工具结果完成处理。最近一次工具返回：${(toolRes?.content || '').slice(0, 80)}`;
+      const raw = toolRes?.content || '';
+      // 工具结果常是 JSON（如 fs_read 返回 {"content":"..."}）；优先回显其中的可读内容，
+      // 让测试能验证「读回」逻辑，也更接近真实 LLM 把工具结果纳入回复的行为。
+      let highlight = raw;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.content === 'string') highlight = parsed.content;
+      } catch { /* 非 JSON 则原样回显 */ }
+      const summary = `【Mock】已根据工具结果完成处理。最近一次工具返回：${highlight.slice(0, 200)}`;
       if (opts.onToken) opts.onToken(summary);
       return { role: 'assistant', content: summary };
     }
