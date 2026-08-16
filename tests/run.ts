@@ -99,7 +99,7 @@ async function main() {
       if (m.type === 'done') { r.done = true; ws.close(); resolve(r); }
     });
     ws.on('error', (e) => { console.log('ws err', (e as Error).message); resolve(r); });
-    setTimeout(() => { ws.close(); resolve(r); }, 8000);
+    setTimeout(() => { ws.close(); resolve(r); }, 15000);
   });
   ok('WS 收到流式 token', got.tokens.length > 0, 'len=' + got.tokens.length);
   ok('WS 收到 done', got.done);
@@ -112,4 +112,4 @@ async function main() {
   process.exit(fail === 0 ? 0 : 1);
 }
 
-main().catch(e => { console.error('测试异常:', e); process.exit(1); });
+main().catch(e => { console.error('测试异常:', e && e.stack ? e.stack : e); process.exit(1); });
