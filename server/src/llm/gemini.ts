@@ -7,10 +7,10 @@
 
 import { GoogleGenerativeAI, type GenerativeModel } from '@google/generative-ai';
 import type { LLMProvider, LLMResponse } from './provider';
-import type { ChatMessage } from '../core/types';
+import type { ChatMessage, ToolDef } from '../core/types';
 import { config, env } from '../config';
 
-const PLACEHOLDER: LLMResponse = { content: 'Gemini response', model: 'gemini', tokens: 0, latency: 0 };
+const PLACEHOLDER: LLMResponse = { content: '[未配置 GOOGLE_API_KEY]', model: 'gemini', tokens: 0, latency: 0 };
 
 export class GeminiProvider implements LLMProvider {
   name = 'gemini';
@@ -46,14 +46,27 @@ export class GeminiProvider implements LLMProvider {
     return this.model_;
   }
 
-  async chat(messages: ChatMessage[]): Promise<LLMResponse> {
+  async chat(messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse> {
     if (!this.isConfigured()) return { ...PLACEHOLDER };
 
     const start = Date.now();
     const model = this.model();
 
+    let request: any;
+    if (tools?.length) {
+      const contents = messages.map((m: any) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: String(m.content ?? '') }],
+      }));
+      request = {
+        contents,
+        tools: [{ functionDeclarations: tools.map((t) => ({ name: t.name, description: t.description, parameters: t.parameters })) }],
+        toolConfig: { functionCallingConfig: { mode: 'NONE' } },
+      };
+    }
+
     const result = await this.sdk().generateContent(
-      messages.map((m: any) => String(m.content ?? '')).join('\n')
+      request ?? messages.map((m: any) => String(m.content ?? '')).join('\n')
     );
 
     return {
@@ -65,13 +78,25 @@ export class GeminiProvider implements LLMProvider {
   }
 
   /** Phase 2 - Step 1 §三：流式输出 */
-  async *stream(messages: ChatMessage[]): AsyncGenerator<string> {
+  async *stream(messages: ChatMessage[], tools?: ToolDef[]): AsyncGenerator<string> {
     if (!this.isConfigured()) {
       yield PLACEHOLDER.content;
       return;
     }
+    let request: any;
+    if (tools?.length) {
+      const contents = messages.map((m: any) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: String(m.content ?? '') }],
+      }));
+      request = {
+        contents,
+        tools: [{ functionDeclarations: tools.map((t) => ({ name: t.name, description: t.description, parameters: t.parameters })) }],
+        toolConfig: { functionCallingConfig: { mode: 'NONE' } },
+      };
+    }
     const result = await this.sdk().generateContentStream(
-      messages.map((m: any) => String(m.content ?? '')).join('\n')
+      request ?? messages.map((m: any) => String(m.content ?? '')).join('\n')
     );
     for await (const chunk of result.stream) {
       const text = chunk.text();

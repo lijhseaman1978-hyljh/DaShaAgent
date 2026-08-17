@@ -186,12 +186,9 @@ async function bootEngine() {
       } catch { return ''; }
     },
     onRecall: async (task) => {
-      console.log('[Hook] onRecall triggered for:', task.slice(0, 60));
       try {
-        const ctx = await cognitiveMemory.buildContext(task, 5);
-        console.log('[Hook] recall result:', ctx ? `${ctx.length} chars` : 'empty');
-        return ctx;
-      } catch(e: any) { console.log('[Hook] onRecall error:', e.message); return ''; }
+        return await cognitiveMemory.buildContext(task, 5);
+      } catch { return ''; }
     },
     onStart: ({ task }) => {
       const spanId = `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;

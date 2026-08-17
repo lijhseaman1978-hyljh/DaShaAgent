@@ -12,11 +12,11 @@
 
 import OpenAI from 'openai';
 import type { LLMProvider, LLMResponse } from './provider';
-import type { ChatMessage } from '../core/types';
+import type { ChatMessage, ToolDef } from '../core/types';
 import { CloudProvider } from './cloud';
 import { CONFIG, config, env } from '../config';
 
-const PLACEHOLDER: LLMResponse = { content: 'OpenAI response', model: 'gpt', tokens: 0, latency: 0 };
+const PLACEHOLDER: LLMResponse = { content: '[未配置 OPENAI_API_KEY]', model: 'gpt', tokens: 0, latency: 0 };
 
 const OFFICIAL_BASE = 'https://api.openai.com/v1';
 
@@ -77,7 +77,7 @@ export class OpenAIProvider implements LLMProvider {
     return this.client;
   }
 
-  async chat(messages: ChatMessage[]): Promise<LLMResponse> {
+  async chat(messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse> {
     if (!this.isConfigured()) return { ...PLACEHOLDER };
 
     const start = Date.now();
@@ -85,14 +85,17 @@ export class OpenAIProvider implements LLMProvider {
 
     if (this.useBridge()) {
       if (!this.bridge) this.bridge = new CloudProvider(CONFIG.CLOUD_BASE, this.key(), model);
-      const msg = await this.bridge.chat({ messages });
+      const msg = await this.bridge.chat({ messages, tools });
       return { content: msg.content || '', model, tokens: 0, latency: Date.now() - start };
     }
 
-    const response = await this.sdk().chat.completions.create({
-      model,
-      messages: messages as any,
-    });
+    const body: any = { model, messages: messages as any };
+    if (tools?.length) {
+      body.tools = tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } }));
+      // 规划阶段：让模型「看到」工具清单即可，禁止其发起工具调用（执行在 V2 路径单独进行）
+      body.tool_choice = 'none';
+    }
+    const response = await this.sdk().chat.completions.create(body);
 
     return {
       content: response.choices[0]?.message?.content || '',
@@ -103,16 +106,17 @@ export class OpenAIProvider implements LLMProvider {
   }
 
   /** Phase 2 - Step 1 §三：流式输出 */
-  async *stream(messages: ChatMessage[]): AsyncGenerator<string> {
+  async *stream(messages: ChatMessage[], tools?: ToolDef[]): AsyncGenerator<string> {
     if (!this.isConfigured()) {
       yield PLACEHOLDER.content;
       return;
     }
-    const s = await this.sdk().chat.completions.create({
-      model: this.model(),
-      messages: messages as any,
-      stream: true,
-    });
+    const body: any = { model: this.model(), messages: messages as any, stream: true };
+    if (tools?.length) {
+      body.tools = tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } }));
+      body.tool_choice = 'none';
+    }
+    const s: any = await this.sdk().chat.completions.create(body);
     for await (const chunk of s) {
       const delta = chunk.choices[0]?.delta?.content;
       if (delta) yield delta;

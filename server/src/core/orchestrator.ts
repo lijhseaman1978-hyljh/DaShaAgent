@@ -8,6 +8,7 @@
 
 import { Brain } from '../brain';
 import { AgentLoop } from './agentLoop';
+import { registry } from '../tools/registry';
 import type { Provider, RunCallbacks } from './types';
 
 /** 不触发规划的简单模式 */
@@ -41,7 +42,10 @@ export class Orchestrator {
     // 复杂任务 — Brain 先规划
     callbacks?.onActivity?.({ type: 'info', message: '正在分析任务并制定执行计划...' });
     try {
-      const thought = await this.brain.think(userInput);
+      const thought = await this.brain.think(userInput, {
+      tools: registry.listForAgent().map((t) => t.name),
+      toolDefs: registry.listForAgent(),
+    });
 
       if (thought?.plan?.children?.length) {
         const planText = this.formatPlan(thought.plan);

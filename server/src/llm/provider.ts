@@ -8,7 +8,7 @@
 //   下半部分新增 V3 契约，上半部分工厂原样保留，调用方零改动。
 
 import { CONFIG } from '../config';
-import type { Provider, ChatMessage } from '../core/types';
+import type { Provider, ChatMessage, ToolDef } from '../core/types';
 import { MockProvider } from './mock';
 import { OllamaProvider } from './ollama';
 import { CloudProvider } from './cloud';
@@ -115,10 +115,14 @@ export interface LLMResponse {
 export interface LLMProvider {
   name: string;
 
-  chat(messages: ChatMessage[]): Promise<LLMResponse>;
+  /**
+   * 对话。tools 为可选的原生工具清单（OpenAI/Claude/Gemini 函数调用 schema），
+   * 传入后模型可在规划/推理时看到可用工具（P1：V3 接口 tools 透传）。
+   */
+  chat(messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse>;
 
   /** Phase 2 - Step 1 §三：流式输出（可选实现） */
-  stream?(messages: ChatMessage[]): AsyncGenerator<string>;
+  stream?(messages: ChatMessage[], tools?: ToolDef[]): AsyncGenerator<string>;
 
   /** 可选：一行状态描述，供 OS 启动横幅展示（ready / stub 等） */
   status?(): string;

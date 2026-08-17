@@ -51,6 +51,32 @@ async function main() {
   const out2 = await loop.run({ userInput: 'TOOL:fs_read:{"path":"notes/hello.txt"}', sessionId: 'test_read' });
   ok('可读回刚写入的内容', /你好，世界/.test(out2), out2.slice(0, 40));
 
+  // ---- 1b. AgentLoop 深度测试（状态保持 / 容错）----
+  section('1b. AgentLoop 深度测试');
+  // 多步：先写后读（用不同会话，规避 Mock 在含历史 tool 结果时直接收尾的捷径），验证工具结果与磁盘状态保留
+  await loop.run({ userInput: 'TOOL:fs_write:{"path":"notes/step1.txt","content":"步骤一完成"}', sessionId: 'test_mstep_w' });
+  ok('深度-已写入 step1.txt', fs.existsSync(path.join(CONFIG.WORKSPACE_DIR, 'notes', 'step1.txt')));
+  const mstep2 = await loop.run({ userInput: 'TOOL:fs_read:{"path":"notes/step1.txt"}', sessionId: 'test_mstep_r' });
+  ok('深度-读回写入内容', /步骤一完成/.test(mstep2), mstep2.slice(0, 40));
+
+  // 容错：读取不存在的文件不应抛异常，应给出可容错的回复（不崩溃、有输出）
+  let crashed = false;
+  let errOut = '';
+  try {
+    errOut = await loop.run({ userInput: 'TOOL:fs_read:{"path":"notes/__no_such_file__.txt"}', sessionId: 'test_err' });
+  } catch { crashed = true; }
+  ok('深度-读取缺失文件不崩溃', !crashed, crashed ? 'threw' : 'ok');
+  ok('深度-错误场景有回显输出', typeof errOut === 'string' && errOut.length > 0, (errOut || '').slice(0, 40));
+
+  // 容错：非法 JSON 参数不应让整个循环挂掉（Mock 退化为普通回复，循环仍正常收尾）
+  let crashed2 = false;
+  let badOut = '';
+  try {
+    badOut = await loop.run({ userInput: 'TOOL:fs_read:broken_json_no_braces', sessionId: 'test_bad' });
+  } catch { crashed2 = true; }
+  ok('深度-非法参数不崩溃', !crashed2, crashed2 ? 'threw' : 'ok');
+  ok('深度-非法参数有收尾输出', typeof badOut === 'string' && badOut.length > 0, (badOut || '').slice(0, 40));
+
   // ---- 2. 记忆持久化 ----
   section('2. 记忆层');
   memory.updateProfile({ name: 'your-user', role: '船长' });

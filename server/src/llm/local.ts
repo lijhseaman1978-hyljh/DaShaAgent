@@ -10,11 +10,11 @@
 //   Ollama 未运行时退回占位响应，保证离线环境启动不报错。
 
 import type { LLMProvider, LLMResponse } from './provider';
-import type { ChatMessage } from '../core/types';
+import type { ChatMessage, ToolDef } from '../core/types';
 import { OllamaProvider } from './ollama';
 import { CONFIG, config, env } from '../config';
 
-const PLACEHOLDER: LLMResponse = { content: 'Local model response', model: 'local', tokens: 0, latency: 0 };
+const PLACEHOLDER: LLMResponse = { content: `[本地模型未就绪：Ollama 未连接 ${CONFIG.OLLAMA_BASE}]`, model: 'local', tokens: 0, latency: 0 };
 
 export class LocalProvider implements LLMProvider {
   name = 'local';
@@ -55,15 +55,19 @@ export class LocalProvider implements LLMProvider {
     return `${CONFIG.OLLAMA_BASE.replace(/\/+$/, '')}/api/chat`;
   }
 
-  private payload(messages: ChatMessage[], stream: boolean) {
-    return JSON.stringify({
+  private payload(messages: ChatMessage[], stream: boolean, tools?: ToolDef[]) {
+    const body: any = {
       model: this.impl.modelName,
       messages: messages.map((m: any) => ({ role: m.role, content: String(m.content ?? '') })),
       stream,
-    });
+    };
+    if (tools?.length) {
+      body.tools = tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } }));
+    }
+    return JSON.stringify(body);
   }
 
-  async chat(messages: ChatMessage[]): Promise<LLMResponse> {
+  async chat(messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse> {
     if (this.online === null) await this.probe();
     if (!this.online) return { ...PLACEHOLDER };
 
@@ -71,7 +75,7 @@ export class LocalProvider implements LLMProvider {
     const response = await fetch(this.endpoint(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: this.payload(messages, false),
+      body: this.payload(messages, false, tools),
     });
 
     const data: any = await response.json();
@@ -85,7 +89,7 @@ export class LocalProvider implements LLMProvider {
   }
 
   /** Phase 2 - Step 1 §三：流式输出（Ollama NDJSON 流） */
-  async *stream(messages: ChatMessage[]): AsyncGenerator<string> {
+  async *stream(messages: ChatMessage[], tools?: ToolDef[]): AsyncGenerator<string> {
     if (this.online === null) await this.probe();
     if (!this.online) {
       yield PLACEHOLDER.content;
@@ -95,7 +99,7 @@ export class LocalProvider implements LLMProvider {
     const response = await fetch(this.endpoint(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: this.payload(messages, true),
+      body: this.payload(messages, true, tools),
     });
     if (!response.body) return;
 

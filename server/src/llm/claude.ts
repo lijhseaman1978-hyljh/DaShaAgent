@@ -7,10 +7,10 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import type { LLMProvider, LLMResponse } from './provider';
-import type { ChatMessage } from '../core/types';
+import type { ChatMessage, ToolDef } from '../core/types';
 import { config, env } from '../config';
 
-const PLACEHOLDER: LLMResponse = { content: 'Claude response', model: 'claude', tokens: 0, latency: 0 };
+const PLACEHOLDER: LLMResponse = { content: '[未配置 ANTHROPIC_API_KEY]', model: 'claude', tokens: 0, latency: 0 };
 
 export class ClaudeProvider implements LLMProvider {
   name = 'claude';
@@ -40,7 +40,7 @@ export class ClaudeProvider implements LLMProvider {
     return this.client;
   }
 
-  async chat(messages: ChatMessage[]): Promise<LLMResponse> {
+  async chat(messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse> {
     if (!this.isConfigured()) return { ...PLACEHOLDER };
 
     const start = Date.now();
@@ -51,12 +51,16 @@ export class ClaudeProvider implements LLMProvider {
       .map((m: any) => String(m.content ?? ''))
       .join('\n');
 
-    const result = await this.sdk().messages.create({
+    const payload: any = {
       model,
       max_tokens: 4096,
       ...(system ? { system } : {}),
       messages: messages.filter((m: any) => m.role !== 'system') as any,
-    });
+    };
+    if (tools?.length) {
+      payload.tools = tools.map((t) => ({ name: t.name, description: t.description, input_schema: t.parameters || {} }));
+    }
+    const result = await this.sdk().messages.create(payload);
 
     const first = result.content[0] as any;
     return {
@@ -68,7 +72,7 @@ export class ClaudeProvider implements LLMProvider {
   }
 
   /** Phase 2 - Step 1 §三：流式输出 */
-  async *stream(messages: ChatMessage[]): AsyncGenerator<string> {
+  async *stream(messages: ChatMessage[], tools?: ToolDef[]): AsyncGenerator<string> {
     if (!this.isConfigured()) {
       yield PLACEHOLDER.content;
       return;
@@ -78,13 +82,17 @@ export class ClaudeProvider implements LLMProvider {
       .map((m: any) => String(m.content ?? ''))
       .join('\n');
 
-    const s = await this.sdk().messages.create({
+    const payload: any = {
       model: this.model(),
       max_tokens: 4096,
       ...(system ? { system } : {}),
       messages: messages.filter((m: any) => m.role !== 'system') as any,
       stream: true,
-    });
+    };
+    if (tools?.length) {
+      payload.tools = tools.map((t) => ({ name: t.name, description: t.description, input_schema: t.parameters || {} }));
+    }
+    const s = await this.sdk().messages.create(payload);
     for await (const event of s as any) {
       if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
         yield event.delta.text as string;

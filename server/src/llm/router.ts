@@ -9,7 +9,7 @@
 // 用于 §九「连接 Config」与 §十 启动横幅的 Available Models 展示。
 
 import type { LLMProvider, LLMResponse } from './provider';
-import type { ChatMessage } from '../core/types';
+import type { ChatMessage, ToolDef } from '../core/types';
 import { OpenAIProvider } from './openai';
 import { ClaudeProvider } from './claude';
 import { GeminiProvider } from './gemini';
@@ -41,11 +41,11 @@ export class LLMRouter {
     return provider;
   }
 
-  async chat(provider: string, messages: ChatMessage[]): Promise<LLMResponse> {
+  async chat(provider: string, messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse> {
     const start = Date.now();
     metrics.increment(`llm.${provider}.calls`);
     try {
-      const res = await this.get(provider).chat(messages);
+      const res = await this.get(provider).chat(messages, tools);
       const latency = Date.now() - start;
       metrics.increment(`llm.${provider}.tokens`, res.tokens ?? 0);
       cost.record({
@@ -64,7 +64,7 @@ export class LLMRouter {
       for (const alt of fallbackChain) {
         if (alt === provider) continue;
         try {
-          const altRes = await this.get(alt).chat(messages);
+          const altRes = await this.get(alt).chat(messages, tools);
           const latency = Date.now() - start;
           metrics.increment(`llm.${alt}.calls`);
           metrics.increment(`llm.${alt}.tokens`, altRes.tokens ?? 0);
@@ -115,20 +115,20 @@ export class LLMRouter {
   }
 
   /** 智能对话：先 select 再 chat */
-  async smartChat(task: string, messages: ChatMessage[]): Promise<LLMResponse> {
+  async smartChat(task: string, messages: ChatMessage[], tools?: ToolDef[]): Promise<LLMResponse> {
     const provider = this.select(task);
 
-    return this.chat(provider, messages);
+    return this.chat(provider, messages, tools);
   }
 
   /** §三 流式：provider 未实现 stream 时降级为整段 yield */
-  async *stream(provider: string, messages: ChatMessage[]): AsyncGenerator<string> {
+  async *stream(provider: string, messages: ChatMessage[], tools?: ToolDef[]): AsyncGenerator<string> {
     const p = this.get(provider);
     if (p.stream) {
-      yield* p.stream(messages);
+      yield* p.stream(messages, tools);
       return;
     }
-    const res = await p.chat(messages);
+    const res = await p.chat(messages, tools);
     yield res.content;
   }
 

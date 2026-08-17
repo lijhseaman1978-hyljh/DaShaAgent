@@ -46,7 +46,7 @@ export class Planner {
             `1. 读取并解析指定文件\n` +
             `2. 分析数据并提取关键信息\n` +
             `3. 生成格式化的输出报告`,
-        });
+        }, context?.toolDefs);
 
         const steps = this.parseSteps(analysis);
         if (steps.length > 0) {

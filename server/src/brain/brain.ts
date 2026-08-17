@@ -7,6 +7,7 @@
 import { Planner } from './planner';
 import { Reasoner } from './reasoner';
 import { ContextBuilder } from './contextBuilder';
+import type { ToolDef } from '../core/types';
 
 export interface Thought {
   analysis: string;
@@ -24,6 +25,8 @@ export interface ThinkOptions {
   skills?: string[];
   /** 是否跳过感知加载（默认 false，即自动加载） */
   skipPerception?: boolean;
+  /** P1：原生工具 schema 清单（规划时透传给模型，使其看到可用工具） */
+  toolDefs?: ToolDef[];
 }
 
 export class Brain {
@@ -44,10 +47,10 @@ export class Brain {
       perception: opts.skipPerception ? null : undefined,
     });
 
-    const analysis = await this.reasoner.analyze(ctx);
+    const analysis = await this.reasoner.analyze(ctx, opts.toolDefs);
 
     // 将 Reasoner 分析结果传入 Planner，实现 LLM 驱动真实规划（B14 修复）
-    const plan = await this.planner.plan(goal, { analysis, tools: ctx.tools });
+    const plan = await this.planner.plan(goal, { analysis, tools: ctx.tools, toolDefs: opts.toolDefs });
     plan.name = 'root'; // 确保顶层有 name 字段向后兼容
 
     return {
@@ -72,11 +75,12 @@ export class Brain {
       perception: opts.skipPerception ? null : undefined,
     });
 
-    const analysis = await this.reasoner.analyze(reasoningCtx);
+    const analysis = await this.reasoner.analyze(reasoningCtx, opts.toolDefs);
 
     const plan = await this.planner.plan(goal, {
       analysis,
       tools: opts.tools,
+      toolDefs: opts.toolDefs,
     });
     plan.name = 'root';
 
