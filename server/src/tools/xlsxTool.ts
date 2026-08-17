@@ -3,6 +3,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { CONFIG, ensureDir } from '../config';
 import { registry } from './registry';
+import { resolvePython as pythonBin } from './pythonBin';
 
 // 生成真正的 .xlsx 文档（数据表格），底层由系统 Python + openpyxl 完成（已确认 openpyxl 3.1.5 可用）。
 // 这样「生成 Excel」成为真实可用的能力，模型不再退化到用 fs_write 写文本冒充 xlsx（会生成打不开的损坏文件）。
@@ -119,15 +120,6 @@ function ensureScript(): void {
   }
 }
 
-function pythonBin(): string {
-  const candidates = [
-    'C:/Program Files/Python310/python.exe',
-    process.env.PYTHON_PATH,
-    'python3',
-    'python',
-  ].filter(Boolean) as string[];
-  return candidates[0];
-}
 
 function runPython(script: string, args: string[]): Promise<{ ok: boolean; out: string; err: string }> {
   return new Promise((resolve) => {

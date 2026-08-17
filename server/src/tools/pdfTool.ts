@@ -3,6 +3,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { CONFIG, ensureDir } from '../config';
 import { registry } from './registry';
+import { resolvePython as pythonBin } from './pythonBin';
 
 // 生成真正的 PDF 文档（支持中文），底层由系统 Python + reportlab 完成。
 // 选择 reportlab 而非纯 Node 的原因：PDF 标准字体（Helvetica）不含中文字形，
@@ -77,15 +78,6 @@ function ensureScript(): void {
   }
 }
 
-function pythonBin(): string {
-  const candidates = [
-    'C:/Program Files/Python310/python.exe',
-    process.env.PYTHON_PATH,
-    'python3',
-    'python',
-  ].filter(Boolean) as string[];
-  return candidates[0];
-}
 
 function runPython(script: string, args: string[]): Promise<{ ok: boolean; out: string; err: string }> {
   return new Promise((resolve) => {

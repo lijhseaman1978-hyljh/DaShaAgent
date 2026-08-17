@@ -6,6 +6,7 @@ import { CONFIG, ensureDir } from '../config';
 import { registry } from './registry';
 import { modelSupportsImages } from '../core/modelCaps';
 import { pushImage } from '../core/imageBus';
+import { resolvePython as pythonBin } from './pythonBin';
 
 // ── 统一多格式解析器 ──────────────────────────────────────────────────
 // read_any.py 一个进程覆盖 pdf/docx/pptx/xlsx/epub/ipynb/html/rtf/eml/csv/zip/image/text。
@@ -13,10 +14,6 @@ import { pushImage } from '../core/imageBus';
 // 对齐 WorkBuddy 内核 Read 工具的设计：大文件不是截断放弃，而是回传 next_offset 引导续读。
 const ANY_READER = fileURLToPath(new URL('./read_any.py', import.meta.url));
 
-function pythonBin(): string {
-  const cands = ['C:/Program Files/Python310/python.exe', process.env.PYTHON_PATH, 'python3', 'python'].filter(Boolean) as string[];
-  return cands[0];
-}
 
 export interface ReadEnvelope {
   ok: boolean;

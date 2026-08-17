@@ -13,6 +13,7 @@
 
 
 import { registry } from './registry';
+import { resolvePython as pythonBin } from './pythonBin';
 
 import { spawnSync } from 'node:child_process';
 
@@ -22,13 +23,6 @@ import path from 'node:path';
 
 
 
-function pythonBin(): string {
-
-  const cands = ['C:/Program Files/Python310/python.exe', process.env.PYTHON_PATH, 'python3', 'python'].filter(Boolean) as string[];
-
-  return cands[0];
-
-}
 
 
 

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { CONFIG, ensureDir } from '../config';
 import { registry } from './registry';
+import { resolvePython as pythonBin } from './pythonBin';
 
 // 生成真正的 .pptx 演示文稿，底层由系统 Python + python-pptx 完成（已确认 python-pptx 1.0.2 可用）。
 // 输入 content 支持 Markdown 风格：# 标题 = 一张幻灯片的标题，- 要点 = 该幻灯片的要点；可选 title 作为封面页。
@@ -69,15 +70,6 @@ function ensureScript(): void {
   }
 }
 
-function pythonBin(): string {
-  const candidates = [
-    'C:/Program Files/Python310/python.exe',
-    process.env.PYTHON_PATH,
-    'python3',
-    'python',
-  ].filter(Boolean) as string[];
-  return candidates[0];
-}
 
 function runPython(script: string, args: string[]): Promise<{ ok: boolean; out: string; err: string }> {
   return new Promise((resolve) => {

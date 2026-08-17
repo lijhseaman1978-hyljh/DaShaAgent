@@ -6,6 +6,7 @@ import { getSkills } from '../skills/loader';
 import { CONFIG } from '../config';
 import { config as sysConfig } from '../config/config';
 import { security } from '../security';
+import { resolvePython as pythonBin } from './pythonBin';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 阶段7：技能 entrypoint 执行器
@@ -19,15 +20,6 @@ const ALLOWED_EXT = /\.(py|js|ts|sh|bat|ps1)$/i;
 const DEFAULT_TIMEOUT_MS = 60_000;
 const MAX_OUTPUT_CHARS = 8000;
 
-function pythonBin(): string {
-  const candidates = [
-    'C:/Program Files/Python310/python.exe',
-    process.env.PYTHON_PATH,
-    'python3',
-    'python',
-  ].filter(Boolean) as string[];
-  return candidates[0];
-}
 
 function resolveInterpreter(ext: string): { bin: string; pre: string[] } {
   switch (ext.toLowerCase()) {
